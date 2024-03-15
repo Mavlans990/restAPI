@@ -1,0 +1,462 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "RESTful API Kelompok 1",
+    "description": "Open API Untuk RESTful API",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Kelompok 1 API",
+      "email": "maulana.22088@mhs.unesa.ac.id",
+      "url": "https://github.com/Mavlans990/restAPI"
+    },
+    "license": {
+      "name": "APACHE 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+
+  "servers": [
+    {
+      "url": "http://{environment}.localhost:8000/api/v1/",
+      "description": "Development API server",
+      "variables": {
+        "environment": {
+          "default": "dev",
+          "description": "Server Environment",
+          "enum": ["dev", "qa", "prod"]
+        }
+      }
+    }
+  ],
+
+  "paths": {
+    "/databuku": {
+      "get": {
+        "security": [
+          {
+            "ProductAuth": []
+          }
+        ],
+        "tags": ["Product"],
+        "summary": "Get semua data Buku",
+        "description": "Dapatkan informasi tentang data buku",
+        "responses": {
+          "200": {
+            "description": "Sukses mendapatkan data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Array product"
+                  }
+                },
+                "examples": {
+                  "id_buku": {
+                    "value": [
+                      {
+                        "id_buku": "1",
+                        "judul": "Sapiens: A Brief History of Humankind",
+                        "nama": "Yuval Noah Harari",
+                        "tgl_terbit": "2011"
+                      },
+                      {
+                        "id_buku": "2",
+                        "judul": "The Great Gatsby",
+                        "nama": "F. Scott Fitzgerald",
+                        "tgl_terbit": "1925"
+                      },
+                      {
+                        "id_buku": "3",
+                        "judul": "To Kill a Mockingbird",
+                        "nama": "Harper Lee",
+                        "tgl_terbit": "1960"
+                      }
+                    ]
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id_buku": {
+                      "type": "integer",
+                      "description": "ID",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id_buku",
+            "description": "Cari data dengan Id Buku",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "nullable": true
+            },
+            "examples": {
+              "id_buku": {
+                "value": ""
+              }
+            }
+          },
+          {
+            "name": "Judul",
+            "description": "Cari data dengan Judul Buku",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "maxLength": 100,
+              "minLength": 1
+            },
+            "examples": {
+              "Judul": {
+                "value": ""
+              }
+            }
+          },
+          {
+            "name": "Nama",
+            "description": "Cari data dengan Nama Buku",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "maxLength": 100,
+              "minLength": 1
+            },
+            "examples": {
+              "Nama": {
+                "value": ""
+              }
+            }
+          },
+          {
+            "name": "Tanggal Terbit",
+            "description": "Cari data dengan Tanggal Terbit Buku",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "maxLength": 100,
+              "minLength": 1
+            },
+            "examples": {
+              "Tanggal Terbit": {
+                "value": ""
+              }
+            }
+          }
+        ]
+      },
+      "post": {
+        "security": [
+          {
+            "ProductAuth": []
+          }
+        ],
+        "tags": ["Product"],
+        "summary": "Add Buku",
+        "description": "Tambahkan Data Buku sesuai tahun",
+        "operationId": "addProd",
+
+        "requestBody": {
+          "required": true,
+          "description": "Tambahkan data Buku",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateorUpdate data"
+              },
+              "examples": {
+                "1951": {
+                  "value": {
+                    "judul": "The Catcher in the Rye",
+                    "nama": "J.D. Salinger",
+                    "tgl_terbit": "1960"
+                  }
+                },
+                "1997": {
+                  "value": {
+                    "judul": "Harry Potter and the Philosopher's Stone",
+                    "nama": "J.K. Rowling",
+                    "tgl_terbit": "1997"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operasi Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Databuku"
+                },
+                "examples": {
+                  "data buku": {
+                    "description": "sukses memuat data",
+                    "value": {
+                      "id_buku": "integer",
+                      "judul": "string",
+                      "name": "string",
+                      "tgl_terbit": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product/{productId}": {
+      "put": {
+        "security": [
+          {
+            "ProductAuth": []
+          }
+        ],
+        "tags": ["Product"],
+        "summary": "Update product",
+        "description": "Update product secara permanen",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Idbuku"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Create a new product",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateorUpdate data"
+              },
+              "examples": {
+                "1951": {
+                  "value": {
+                    "judul": "The Catcher in the Rye",
+                    "nama": "J.D. Salinger",
+                    "tgl_terbit": "1960"
+                  }
+                },
+                "1997": {
+                  "value": {
+                    "judul": "Harry Potter and the Philosopher's Stone",
+                    "nama": "J.K. Rowling",
+                    "tgl_terbit": "1997"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful update operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Databuku"
+                },
+                "examples": {
+                  "1951": {
+                    "value": {
+                      "id_buku": "1",
+                      "judul": "Sapiens: A Brief History of Humankind",
+                      "nama": "Yuval Noah Harari",
+                      "tgl_terbit": "2011"
+                    }
+                  },
+                  "1997": {
+                    "value": {
+                      "judul": "Harry Potter and the Philosopher's Stone",
+                      "nama": "J.K. Rowling",
+                      "tgl_terbit": "1997"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "ProductAuth": []
+          }
+        ],
+        "tags": ["Product"],
+        "summary": "Delete product",
+        "description": "Delete product permanently",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Idbuku"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "succces delete data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Databuku"
+                },
+                "examples": {
+                  "succces": {
+                    "description": "success delete data",
+                    "value": {
+                      "judul": "Sapiens: A Brief History of Humankind",
+                      "nama": "Yuval Noah Harari",
+                      "tgl_terbit": "2011"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "failed delete data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Databuku"
+                },
+                "examples": {
+                  "failed": {
+                    "description": "failed delete data",
+                    "value": {
+                      "id_buku": "3",
+                      "judul": "To Kill a Mockingbird",
+                      "nama": "Harper Lee",
+                      "tgl_terbit": "1960"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "securitySchemes": {
+      "ProductAuth": {
+        "description": "Authentication for RESTful API",
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "parameters": {
+      "Idbuku": {
+        "name": "Idbuku",
+        "description": "product Id for Update or Delete",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 99
+        },
+        "examples": {
+          "id_buku": {
+            "description": "example use id buku",
+            "value": "1"
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Databuku": {
+        "type": "object",
+        "properties": {
+          "id_buku": {
+            "type": "integer",
+            "description": "ID",
+            "nullable": false
+          },
+          "judul": {
+            "type": "string",
+            "description": "Judul",
+            "nullable": false
+          },
+          "nama": {
+            "type": "string",
+            "description": "Nama",
+            "nullable": false
+          },
+          "tgl_terbit": {
+            "type": "string",
+            "description": "Tanggal Terbit",
+            "nullable": false
+          }
+        }
+      },
+      "CreateorUpdate data": {
+        "type": "object",
+        "properties": {
+          "nama": {
+            "type": "string",
+            "description": "nama",
+            "nullable": false
+          },
+          "judul": {
+            "type": "string",
+            "description": "Judul"
+          },
+          "tgl_terbit": {
+            "type": "string",
+            "description": "Tanggal Terbit",
+            "nullable": false
+          }
+        }
+      },
+      "Array product": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id_buku": {
+              "type": "integer",
+              "description": "ID",
+              "nullable": false
+            },
+            "judul": {
+              "type": "string",
+              "description": "Judul",
+              "nullable": false
+            },
+            "nama": {
+              "type": "string",
+              "description": "Nama",
+              "nullable": false
+            },
+            "tgl_terbit": {
+              "type": "string",
+              "description": "Tanggal Terbit",
+              "nullable": false
+            }
+          }
+        }
+      }
+    }
+  }
+}
